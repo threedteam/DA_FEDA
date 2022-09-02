@@ -41,7 +41,7 @@ class FeatureExtractor(nn.Module):
 class class_classifier(nn.Module):
     def __init__(self):
         super(class_classifier, self).__init__()
-        self.out = nn.Linear(200,6)
+        self.out = nn.Linear(200,6)      ## Sets the output layer units according to the data format
 
     def forward(self,x):
         out1 = self.out(x)
@@ -51,7 +51,7 @@ class Domain_classifier(nn.Module):
     def __init__(self):
         super(Domain_classifier, self).__init__()
         # self.domian_out1 = nn.Linear(200,100)
-        self.domian_out2 = nn.Linear(200,2)
+        self.domian_out2 = nn.Linear(200,2)      ## domain label source domain as 0 and target as 1
 
     def forward(self,x,constant):
         input = GradReverse.grad_reverse(x,constant)
