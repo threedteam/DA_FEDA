@@ -1,5 +1,5 @@
 # encoding=utf-8
-## Code of "Drift Compensation for an Electronic Nose by Adaptive Subspace Learning" Author: Dr.Zhang
+## Code of "Anti-drift in e-nose: A subspace projection approach with drift reduction" Author: Dr.Zhang
 ## Code recurrence
 """
     Modified on 2022 
