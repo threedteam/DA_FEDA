@@ -20,7 +20,7 @@ class GradReverse(torch.autograd.Function):
 
     @staticmethod
     def backward(ctx, grad_output):
-        grad_output = grad_output.neg() * ctx.constant
+        grad_output = grad_output.neg() * ctx.constant     ## .neg(), Returns the input tensor as negative by element, out=−1∗input
         return grad_output, None
 
     def grad_reverse(x, constant):
@@ -29,12 +29,12 @@ class GradReverse(torch.autograd.Function):
 class FeatureExtractor(nn.Module):
     def __init__(self):
         super(FeatureExtractor, self).__init__()
-        self.feature = nn.Linear(128,200)
-        self.batch = nn.BatchNorm1d(200)
+        self.feature = nn.Linear(128,200)               ## input layer, according to the data format
+        self.batch = nn.BatchNorm1d(200)                ## normalization
 
 
     def forward(self,x):
-        x = F.relu(self.feature(x))
+        x = F.relu(self.feature(x))                     ## The activation function relu
         x = self.batch(x)
         return x
 
@@ -45,7 +45,7 @@ class class_classifier(nn.Module):
 
     def forward(self,x):
         out1 = self.out(x)
-        return F.log_softmax(out1,1),out1
+        return F.log_softmax(out1,1),out1   ## output the label
 
 class Domain_classifier(nn.Module):
     def __init__(self):
