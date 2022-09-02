@@ -54,7 +54,7 @@ class Domain_classifier(nn.Module):
         self.domian_out2 = nn.Linear(200,2)      ## domain label source domain as 0 and target as 1
 
     def forward(self,x,constant):
-        input = GradReverse.grad_reverse(x,constant)
+        input = GradReverse.grad_reverse(x,constant)  ##  reverse the gradient.
         # input = F.relu(self.domian_out1(input))
         return F.log_softmax(self.domian_out2(input),1)
 
