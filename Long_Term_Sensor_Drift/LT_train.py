@@ -55,8 +55,8 @@ def train(training_mode,feature_extractor,class_classifier,domain_classifier,cla
 
     for batch_idx,(sdata,tdata) in enumerate(zip(source_dataloader,target_dataloader)):  ## loop training, the standard PyTorch training mode
         if training_mode == "dann" : # training model is set to dann
-            # 设置超参数
-            p = float(batch_idx + start_steps) / total_steps
+            # Setting HyperParameters
+            p = float(batch_idx + start_steps) / total_steps     ##  a variable for adjusting learning rate 
             constant = 2./(1+np.exp(-LT_params.gamma*p))-1
 
             # 准备数据
