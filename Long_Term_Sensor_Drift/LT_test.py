@@ -8,20 +8,23 @@ import numpy as np
 ###  Test 
 def test(feature_extractor,class_classifier,domain_classifier,source_dataloader,target_dataloader):
     """
-    Test mode
-    :param feature_extractor:  从目标域中提取特征
-    :param class_classifier:   预测类别标签
-    :param domain_classifier:  预测域类别标签
-    :param source_dataloader:  源域数据加载
-    :param target_loader:      目标域数据加载
+    Testing mode
+    :param feature_extractor:  G_f: Extract features from the target or source domain
+    :param class_classifier:   G_y
+    :param domain_classifier:  G_d
+    :param source_dataloader:  source data
+    :param target_loader:      target data
     :return:
     """
     
+    # The standard PyTorch test mode
     feature_extractor.eval()
     class_classifier.eval()
     domain_classifier.eval()
-    source_correct = 0.0
-    target_correct = 0.0
+    
+    ## Save the intermediate variable
+    source_correct = 0.0  ## source
+    target_correct = 0.0  ## target
     domain_correct = 0.0
     tgt_correct = 0.0
     src_correct = 0.0
