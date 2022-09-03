@@ -45,7 +45,7 @@ class class_classifier(nn.Module):
 
     def forward(self,x):
         out1 = self.out(x)
-        return F.log_softmax(out1,1),out1   ## output the label
+        return F.log_softmax(out1,1),out1   ## output the label and probability
 
 class Domain_classifier(nn.Module):
     def __init__(self):
