@@ -5,10 +5,10 @@ import torch
 from torch.autograd import Variable
 import numpy as np
 
-
+###  Test 
 def test(feature_extractor,class_classifier,domain_classifier,source_dataloader,target_dataloader):
     """
-    测试模型
+    Test mode
     :param feature_extractor:  从目标域中提取特征
     :param class_classifier:   预测类别标签
     :param domain_classifier:  预测域类别标签
