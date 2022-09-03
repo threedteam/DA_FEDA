@@ -26,7 +26,7 @@ def get_entropy_loss(p_softmax):
     mask = p_softmax.ge(0.000001)
     mask_out = torch.masked_select(p_softmax,mask)
     entropy = -(torch.sum(mask_out*torch.log(mask_out)))
-    return BP_params.weight_entropy*(entropy/float(p_softmax.size(0)))
+    return LT_params.weight_entropy*(entropy/float(p_softmax.size(0)))
 
 def train(training_mode,feature_extractor,class_classifier,domain_classifier,class_criterion,domain_criterion,
           source_dataloader,target_dataloader,optimizer,epoch):
@@ -68,39 +68,44 @@ def train(training_mode,feature_extractor,class_classifier,domain_classifier,cla
             optimizer.zero_grad()                                   
 
             # Set the domain label to 0 for the source domain and 1 for the target domain
-            source_labels = Variable(torch.zeros(input1.size()[0])).type(torch.LongTensor)
-            target_labels = Variable(torch.ones(input2.size()[0])).type(torch.LongTensor)
+            source_labels = Variable(torch.zeros(input1.size()[0])).type(torch.LongTensor)   ##  source label 0   (pseudo label)
+            target_labels = Variable(torch.ones(input2.size()[0])).type(torch.LongTensor)    ##  target label 1   (pseudo label)
 
             ## Feature extraction using feature extractor 
             src_feature = feature_extractor(input1)    ## source
             tgt_feature = feature_extractor(input2)    ## target
 
             # compute the class loss of src_feature  
-            class_preds,s_logits= class_classifier(src_feature)   # 分类标签结果
-            class_loss = class_criterion(class_preds, label1) # 标签损失
+            class_preds,s_logits= class_classifier(src_feature)   # Predicted labels and probabilities
+            class_loss = class_criterion(class_preds, label1)     ## Calculate the cross-loss of the source domain
 
-            # 计算L2Norm损失
-            src_l2_loss = get_L2Norm_loss(src_feature)
-            tgt_l2_loss = get_L2Norm_loss(tgt_feature)
-            # 计算目标域的类别熵
+            # Calculate the L2 norm
+            src_l2_loss = get_L2Norm_loss(src_feature)  # source
+            tgt_l2_loss = get_L2Norm_loss(tgt_feature)  # target
+            
+            # Calculate the entropy of the target domain
             _,t_logits = class_classifier(tgt_feature)
             t_probs = F.softmax(t_logits)
             t_entropy_loss = get_entropy_loss(t_probs)
-            s_probs = F.softmax(s_logits)
-            s_entropy_loss = get_entropy_loss(s_probs)
-            entropy_loss = s_entropy_loss + t_entropy_loss
-            # 计算域损失
+            %s_probs = F.softmax(s_logits)
+            %s_entropy_loss = get_entropy_loss(s_probs)
+            %entropy_loss = s_entropy_loss + t_entropy_loss
+            
+            # Compute domain adversarial losses
             tgt_preds = domain_classifier(tgt_feature,constant)
             src_preds = domain_classifier(src_feature,constant)
-            tgt_loss = domain_criterion(tgt_preds,target_labels)
-            src_loss = domain_criterion(src_preds,source_labels)
-            domain_loss = tgt_loss + src_loss
+            tgt_loss = domain_criterion(tgt_preds,target_labels)   ## target loss
+            src_loss = domain_criterion(src_preds,source_labels)   ## source loss
+            domain_loss = tgt_loss + src_loss                      ## domain loss = target adversarial loss + source adversarial loss  
 
-            loss = class_loss + BP_params.theta*domain_loss + src_l2_loss + tgt_l2_loss + t_entropy_loss
-            loss.backward()
-            optimizer.step()
+            loss = class_loss + LT_params.theta*domain_loss + src_l2_loss + tgt_l2_loss + t_entropy_loss  ## total loss
+            loss.backward()                # the standard PyTorch training mode     
+            optimizer.step()               # the standard PyTorch training mode
 
-            # 打印损失
+            # Print training process
+            # According to the need to choose
+            
+            
             # if (batch_idx + 1) % 2 == 0:
             #     print('[{}/{} ({:.0f}%)]\tLoss: {:.6f}\tClass Loss: {:.6f}\tDomain Loss: {:.6f}'.format(
             #         batch_idx * len(input2), len(target_dataloader.dataset),
