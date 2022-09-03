@@ -57,25 +57,25 @@ def train(training_mode,feature_extractor,class_classifier,domain_classifier,cla
         if training_mode == "dann" : # training model is set to dann
             # Setting HyperParameters
             p = float(batch_idx + start_steps) / total_steps     ##  a variable for adjusting learning rate 
-            constant = 2./(1+np.exp(-LT_params.gamma*p))-1
+            constant = 2./(1+np.exp(-LT_params.gamma*p))-1       ##  a constant of RevGrad
 
-            # 准备数据
+            # Get data for the source and target domains
             input1,label1 = sdata
             input2,label2 = tdata
 
-            # 动态调整学习率
+            # Dynamically adjust the learning rate, the standard format for PyTorch
             optimizer = LT_utils.optimizer_scheduler(optimizer,p)
-            optimizer.zero_grad()
+            optimizer.zero_grad()                                   
 
-            # 源域标签为0，目标域标签为1
+            # Set the domain label to 0 for the source domain and 1 for the target domain
             source_labels = Variable(torch.zeros(input1.size()[0])).type(torch.LongTensor)
             target_labels = Variable(torch.ones(input2.size()[0])).type(torch.LongTensor)
 
-            # 得到目标域和源域的特征
-            src_feature = feature_extractor(input1)
-            tgt_feature = feature_extractor(input2)
+            ## Feature extraction using feature extractor 
+            src_feature = feature_extractor(input1)    ## source
+            tgt_feature = feature_extractor(input2)    ## target
 
-            # compute the class loss of src_feature  计算源域分类损失
+            # compute the class loss of src_feature  
             class_preds,s_logits= class_classifier(src_feature)   # 分类标签结果
             class_loss = class_criterion(class_preds, label1) # 标签损失
 
