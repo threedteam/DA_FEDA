@@ -3,22 +3,25 @@ from torch.autograd import Variable
 import numpy as np
 import torch.optim as optim
 import torch.nn.functional as F
-from Sensor_GAN import BP_params
-from Sensor_GAN import BP_utils
+from Long_Term_Sensor_Drift import LT_params
+from Long_Term_Sensor_Drift import LT_utils
 import warnings
 warnings.filterwarnings("ignore")
 
+# Calculate the L_f
 def get_L2Norm_loss(x):
     redius = x.norm(p=2,dim=1).detach()
     assert redius.requires_grad == False
     redius +=redius + 1.0
     l = ((x.norm(p=2,dim=1)-redius)**2).mean()
-    return BP_params.weight_L2norm*l
+    return LT_params.weight_L2norm*l
 
+# Calculate the L_z
 def get_L2norm_loss_self_driven(x):
-    l = (x.norm(p=2,dim=1).mean()-BP_params.redius)**2
-    return BP_params.weight_ring*l
+    l = (x.norm(p=2,dim=1).mean()-LT_params.redius)**2
+    return LT_params.weight_ring*l
 
+# Calculate the conditional entropy of target domain
 def get_entropy_loss(p_softmax):
     mask = p_softmax.ge(0.000001)
     mask_out = torch.masked_select(p_softmax,mask)
@@ -28,40 +31,40 @@ def get_entropy_loss(p_softmax):
 def train(training_mode,feature_extractor,class_classifier,domain_classifier,class_criterion,domain_criterion,
           source_dataloader,target_dataloader,optimizer,epoch):
     """
-    训练网络，执行目标域适应
-    :param training_mode: 训练模式
-    :param feature_extractor: 特征提取
-    :param class_classifier: 标签分类器
-    :param domain_classifier: 域分类器
-    :param class_criterion: 标签分类器损失函数
-    :param domain_criterion: 域分类损失函数
-    :param source_dataloader: 源域数据
-    :param target_dataloader: 目标域数据
-    :param optimizer: 优化器
-    :param epoch: 迭代次数
+    
+    :param training_mode:  
+    :param feature_extractor: feature extractor G_f
+    :param class_classifier: label classifier G_y
+    :param domain_classifier: discriminator G_d
+    :param class_criterion: label classifier loss function
+    :param domain_criterion: domain adversarial loss function
+    :param source_dataloader: source data
+    :param target_dataloader: target data
+    :param optimizer: 
+    :param epoch: the number of iterations
     :return:
     """
-    # 设置模型为训练模式
+    # Set the model to training mode
     feature_extractor.train()
     class_classifier.train()
     domain_classifier.train()
 
-    # 步长
-    start_steps = epoch*len(source_dataloader)
-    total_steps = BP_params.epochs * len(source_dataloader)
+    # Set the experimental step
+    start_steps = epoch*len(source_dataloader)          ## start step
+    total_steps = LT_params.epochs * len(source_dataloader)  ## total steps
 
-    for batch_idx,(sdata,tdata) in enumerate(zip(source_dataloader,target_dataloader)):
-        if training_mode == "dann" : # 训练模式为DANN
+    for batch_idx,(sdata,tdata) in enumerate(zip(source_dataloader,target_dataloader)):  ## loop training, the standard PyTorch training mode
+        if training_mode == "dann" : # training model is set to dann
             # 设置超参数
             p = float(batch_idx + start_steps) / total_steps
-            constant = 2./(1+np.exp(-BP_params.gamma*p))-1
+            constant = 2./(1+np.exp(-LT_params.gamma*p))-1
 
             # 准备数据
             input1,label1 = sdata
             input2,label2 = tdata
 
             # 动态调整学习率
-            optimizer = BP_utils.optimizer_scheduler(optimizer,p)
+            optimizer = LT_utils.optimizer_scheduler(optimizer,p)
             optimizer.zero_grad()
 
             # 源域标签为0，目标域标签为1
