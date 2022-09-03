@@ -31,7 +31,7 @@ def get_entropy_loss(p_softmax):
 def train(training_mode,feature_extractor,class_classifier,domain_classifier,class_criterion,domain_criterion,
           source_dataloader,target_dataloader,optimizer,epoch):
     """
-    
+    training mode
     :param training_mode:  
     :param feature_extractor: feature extractor G_f
     :param class_classifier: label classifier G_y
