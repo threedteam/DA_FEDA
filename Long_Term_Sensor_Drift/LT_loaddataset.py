@@ -19,6 +19,7 @@ def datapreprocessing(data):     ## data preprocessing , input data format xxx.c
     dataset = (dataset/np.sqrt(sum(data_temp*data_temp))).values  ## L2 norm regularization
     return dataset,label              ## return dataset and label
 
+## Different experimental batches need to load different experimental data
 dataS = pd.read_csv(r'F:\Machine_Learning\Transductive_Transfer_Learning\batch1.csv',header=None)  ## load source data 
 dataT = pd.read_csv(r"F:\Machine_Learning\Transductive_Transfer_Learning\batch2.csv",header=None)  ## load target data
 batchS,batchS_label = datapreprocessing(dataS)                                                     ## data preprocessing
