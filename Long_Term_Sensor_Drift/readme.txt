@@ -4,7 +4,7 @@ You need to install the PyTorch, numpy, pandas, etc. libraries of Python
 
 ######
 python                     3.7.7
-numpy                     1.18.5
+numpy                      1.18.5
 pandas                     1.0.5
 
 #######################
