@@ -4,7 +4,7 @@ This is a demo,
 Since GitHub cannot upload data (the capacity of this account is limited), I wrote a demo file to facilitate 
 people to understand the main idea of the paper. In the future, when people use real data, they can make corresponding 
 modifications according to this demo file (the main modification is the data loading part). The core part of FEDA is mainly 
-implemented in Model. py and train.py. The Model. py file mainly implements the feature extractor, discriminator (with gradient reversal layer) 
+implemented in model.py and train.py. The model.py file mainly implements the feature extractor, discriminator (with gradient reversal layer) 
 and label classifier, which can be partially fine-tuned according to specific data. The train.py file implements L_f, L_h.
 
 You need to install the PyTorch, numpy, pandas, etc. libraries of Python
