@@ -4,7 +4,7 @@ import numpy as np
 import torch.optim as optim
 import torch.nn.functional as F
 from Sensor_Drift import params
-from Term_Sensor_Drift import utils
+from Sensor_Drift import utils
 import warnings
 warnings.filterwarnings("ignore")
 
