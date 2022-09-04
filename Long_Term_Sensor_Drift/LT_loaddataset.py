@@ -7,6 +7,41 @@ import pandas as pd
 import torch.utils.data as Data
 from torch.autograd import Variable
 
+
+
+# def get_train_loader(dataset):
+#     """
+#     Get train dataloader of source domain or target domain
+#     :return: dataloader
+#     """
+#     if dataset == ' ':
+
+#         data = datasets.
+#         dataloader = DataLoader(dataset= data, batch_size= params.batch_size, shuffle= True)
+#     elif dataset == ' ':
+#         data = datasets.
+#         dataloader = DataLoader(dataset = data, batch_size= params.batch_size, shuffle= True)
+#     else:
+#         raise Exception('There is no dataset named {}'.format(str(dataset)))
+#     return dataloader
+
+
+
+# def get_test_loader(dataset):
+#     """
+#     Get test dataloader of source domain or target domain
+#     :return: dataloader
+#     """
+#     if dataset == ' ':
+#         data = datasets.
+#         dataloader = DataLoader(dataset= data, batch_size= 1, shuffle= False)
+#     elif dataset == ' ':
+#         data = datasets.
+#         dataloader = DataLoader(dataset = data, batch_size= 1, shuffle= False)
+#     else:
+#         raise Exception('There is no dataset named {}'.format(str(dataset)))
+#     return dataloader
+
 def datapreprocessing(data):     ## data preprocessing , input data format xxx.csv
     '''
     data preprocessing
