@@ -1,5 +1,5 @@
 lr = 0.01                  # You can modify this parameter value
-batch_size = 512           # You can modify this parameter value
+batch_size = 64           # You can modify this parameter value
 epochs = 10                # You can modify this parameter value
 gamma = 10                 # You can modify this parameter value
 theta = 1                  # You can modify this parameter value
