@@ -72,8 +72,8 @@ def train(training_mode,feature_extractor,class_classifier,domain_classifier,cla
             optimizer.zero_grad()                                   
 
             # Set the domain label to 0 for the source domain and 1 for the target domain
-            source_labels = Variable(torch.zeros(input1.size()[0])).type(torch.LongTensor)   ##  source label 0   (pseudo label)
-            target_labels = Variable(torch.ones(input2.size()[0])).type(torch.LongTensor)    ##  target label 1   (pseudo label)
+            source_labels = Variable(torch.zeros(input1.size()[0])).type(torch.LongTensor)   ##  source label 0   (domain label)
+            target_labels = Variable(torch.ones(input2.size()[0])).type(torch.LongTensor)    ##  target label 1   (domain label)
 
             ## Feature extraction using feature extractor 
             src_feature = feature_extractor(input1)    ## source
